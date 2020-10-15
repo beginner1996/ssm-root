@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.sm.cn.controller"/>
+
+    <mvc:default-servlet-handler/>
+
+    <mvc:annotation-driven/>
+    <!--全局解决跨域问题，实现前后端分离-->
+    <mvc:cors>
+        <mvc:mapping path="/**"
+                     allowed-methods="*"
+                     allowed-headers="*"
+                     allowed-origins="*"
+                     allow-credentials="false"/>
+    </mvc:cors>
+
+
+    <!--配置发送简单消息的bean-->
+    <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="18439443515@163.com"/>
+    </bean>
+    <!--配置发送邮件的bean-->
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="username" value="18439443515@163.com"/>
+        <property name="password" value="SBMMBSAHCMPDUOWC"/>
+        <property name="host" value="smtp.163.com"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:use-pool="true"/>
+    <!-- redis template definition -->
+    <!--<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory"/>-->
+    <bean class="org.springframework.data.redis.core.StringRedisTemplate" p:connectionFactory-ref="jedisConnectionFactory">
+    </bean>
+
+    <bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/ftl/active.ftl"/>
+
+    </bean>
+
+</beans>
